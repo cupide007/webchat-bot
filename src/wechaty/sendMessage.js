@@ -24,7 +24,7 @@ import { getServe } from './serve.js'
  * @param ServiceType 服务类型 'GPT' | 'Kimi'
  * @returns {Promise<void>}
  */
-export async function defaultMessage(msg, bot, ServiceType = 'GPT') {
+export async function defaultMessage(msg, bot, ServiceType = 'tongyi') {
   const getReply = getServe(ServiceType)
   const contact = msg.talker() // 发消息人
   const receiver = msg.to() // 消息接收人
@@ -43,7 +43,7 @@ export async function defaultMessage(msg, bot, ServiceType = 'GPT') {
   try {
     // 区分群聊和私聊
     // 群聊消息去掉艾特主体后，匹配自动回复前缀
-    if (isRoom && room && content.replace(`${botName}`, '').trimStart().startsWith(`${autoReplyPrefix}`)) {
+    if (isRoom && room ) {
       const question = (await msg.mentionText()) || content.replace(`${botName}`, '').replace(`${autoReplyPrefix}`, '') // 去掉艾特的消息主体
       console.log('🌸🌸🌸 / question: ', question)
       const response = await getReply(question)
@@ -51,7 +51,7 @@ export async function defaultMessage(msg, bot, ServiceType = 'GPT') {
     }
     // 私人聊天，白名单内的直接发送
     // 私人聊天直接匹配自动回复前缀
-    if (isAlias && !room && content.trimStart().startsWith(`${autoReplyPrefix}`)) {
+    if (isAlias && !room) {
       const question = content.replace(`${autoReplyPrefix}`, '')
       console.log('🌸🌸🌸 / content: ', question)
       const response = await getReply(question)

@@ -7,6 +7,7 @@ import { getDeepSeekFreeReply } from '../deepseek-free/index.js'
 import { get302AiReply } from '../302ai/index.js'
 import { getDifyReply } from '../dify/index.js'
 import { getOllamaReply } from '../ollama/index.js'
+import { getTongyiReply } from '../tongyi/index.js'
 const env = dotenv.config().parsed // 环境参数
 
 // 控制启动
@@ -69,6 +70,14 @@ async function handleRequest(type) {
       }
       console.log('❌ 请先配置.env文件中的 OLLAMA_URL')
       break
+    case 'tongyi':
+      if (env.TONGYI_URL) {
+          const message = await getTongyiReply('hello')
+          console.log('🌸🌸🌸 / reply: ', message)
+          return
+        }
+        console.log('❌ 请先配置.env文件中的 TongYi_URL')
+        break  
     default:
       console.log('🚀服务类型错误')
   }
@@ -81,8 +90,8 @@ const serveList = [
   { name: 'deepseek-free', value: 'deepseek-free' },
   { name: '302AI', value: '302AI' },
   { name: 'dify', value: 'dify' },
-  // ... 欢迎大家接入更多的服务
   { name: 'ollama', value: 'ollama' },
+  { name: 'tongyi', value: 'tongyi' }
 ]
 const questions = [
   {
